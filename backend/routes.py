@@ -52,7 +52,7 @@ def parse_json(data):
 # INSERT CODE HERE
 ######################################################################
 @app.route("/health")
-def healthz():
+def health():
     return jsonify(dict(status="OK")), 200
 
 @app.route("/count")
@@ -99,7 +99,7 @@ def update_song(id):
     song_in = request.json
     # check if the song exists in the db
     song = db.songs.find_one({"id":id})
-    if not song:
+    if song == None:
         return {"message": "song not found"}, 404
     updated_data = {"$set": song_in}
     results = db.songs.update_one({"id":id}, updated_data)
@@ -113,5 +113,5 @@ def delete_song(id):
     result = db.songs.delete_one({"id":id})
     if result.deleted_count == 0:
         return {"message": "Song not found"}, 404
-    elif result.deleted_count == 1:
-        return '', 204
+    else:
+        return "", 204
